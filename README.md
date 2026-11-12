@@ -1,19 +1,29 @@
-# UPSI Register: Windows desktop app
+UPSI SHARING REGISTER: package contents
+=======================================
+1. UPSI_Register.html            The tool. Double-click to open it in Chrome or Edge.
+2. Sample_Designated_Persons.xlsx  Example layout for the designated persons list you import.
 
-Builds an installer (.exe) that puts an "UPSI Register" icon on the desktop. It runs fully offline.
+FIRST-TIME SETUP
+- Save UPSI_Register.html in a permanent folder (for example Documents\UPSI). Do not move or rename it later.
+- Open it in a normal browser window (not Private / Incognito).
+- Designated persons tab: replace the (Example) rows in the sample with your people, then click
+  "Import from Excel or CSV". Rows starting with (Example) are skipped.
 
-## Build (once, on one Windows PC with internet)
-1. Install Node.js LTS from https://nodejs.org
-2. Open a terminal (Command Prompt or PowerShell) in this folder.
-3. `npm install`   (downloads Electron and the Excel library; copies the library next to index.html)
-4. `npm start`     (opens the app, to test it)
-5. `npm run dist`  (creates `dist\UPSI Register Setup 1.0.0.exe`)
+DAILY USE
+- Record sharing: one entry per sharing. Add every recipient with "+ Add another recipient".
+- Required fields: nature of UPSI, name and PAN/identifier of the person who shared, and of each recipient.
+- Entries are time-stamped and chained; they cannot be edited or deleted. Fix mistakes with a new entry
+  using "Corrects earlier entry #".
 
-Give that one installer file to each user. They double-click it; it adds the desktop icon.
+SAFETY
+- Data is stored in this browser, on this PC, for this file only. Clearing browser data erases it.
+- Audit & backup tab: click "Download backup (JSON)" after every working session and keep the file safely.
+- "Verify chain now" checks that no entry has been altered.
+- Only one PC/browser holds a register. Entries from different PCs are not combined.
 
-## Notes
-- Data is stored on each PC, in `%APPDATA%\upsi-register`. It is more durable than a browser, but still local to that PC and Windows user. Keep using Audit & backup > Download backup.
-- The installer is unsigned, so Windows SmartScreen will warn ("unknown publisher"). To sell this, buy a code-signing certificate and add it to the electron-builder `win` settings.
-- To change the app's ID and name, edit `appId` and `productName` in package.json.
-- Excel library: `xlsx` 0.18.5 is the last version on npm and has known security advisories (they matter only when opening untrusted files). Newer builds are at https://cdn.sheetjs.com; replace `xlsx.full.min.js` with a current one before release.
-- No auto-update and no shared database: each PC has its own register.
+NOTES
+- Excel import/export and the sample download need an internet connection (the Excel library loads from the web).
+  CSV import/export work offline.
+- Keep records for at least 8 years after the transaction is complete (Reg 3(6)).
+- Reg 3(5) expects the database to be maintained internally. Use this file on your own systems.
+- This tool supports compliance; it does not replace advice from your Compliance Officer or counsel.
