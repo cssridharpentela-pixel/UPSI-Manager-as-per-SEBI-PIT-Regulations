@@ -1,0 +1,20 @@
+{
+  "name": "upsi-register",
+  "version": "1.0.0",
+  "description": "UPSI Sharing Register (SEBI PIT Regulations)",
+  "main": "main.js",
+  "scripts": {
+    "postinstall": "node copy-xlsx.js",
+    "start": "electron .",
+    "dist": "electron-builder --win nsis"
+  },
+  "dependencies": { "xlsx": "0.18.5" },
+  "devDependencies": { "electron": "^31.0.0", "electron-builder": "^24.13.3" },
+  "build": {
+    "appId": "com.example.upsiregister",
+    "productName": "UPSI Register",
+    "win": { "target": "nsis" },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "createDesktopShortcut": true },
+    "files": ["main.js", "index.html", "xlsx.full.min.js", "package.json"]
+  }
+}

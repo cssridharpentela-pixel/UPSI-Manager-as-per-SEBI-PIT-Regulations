@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>UPSI Sharing Register</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f2f5f7;--surface:#fff;--ink:#17232f;--muted:#5b6b78;--line:#d3dce3;--accent:#0e5a63;--accent-ink:#fff;--warn-bg:#fff1d6;--warn:#8a5a00;--ok-bg:#dff3e6;--ok:#17653a;--bad-bg:#fde0de;--bad:#a1241b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#10181f;--surface:#18232c;--ink:#e6edf2;--muted:#9aaab6;--line:#2b3a46;--accent:#4fb3bf;--accent-ink:#06242a;--warn-bg:#3a2d10;--warn:#f0c168;--ok-bg:#123524;--ok:#7fd6a0;--bad-bg:#431a17;--bad:#ff9d94}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#10181f;--surface:#18232c;--ink:#e6edf2;--muted:#9aaab6;--line:#2b3a46;--accent:#4fb3bf;--accent-ink:#06242a;--warn-bg:#3a2d10;--warn:#f0c168;--ok-bg:#123524;--ok:#7fd6a0;--bad-bg:#431a17;--bad:#ff9d94}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif}
+main{max-width:1080px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:1.5rem;margin:0 0 4px;letter-spacing:-.01em}
+h2{font-size:1.05rem;margin:0 0 12px}
+.sub{color:var(--muted);margin:0 0 16px;max-width:70ch}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:16px}
+nav{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:18px;overflow-x:auto}
+nav button{background:none;border:0;border-bottom:3px solid transparent;padding:10px 14px;font:inherit;color:var(--muted);cursor:pointer;white-space:nowrap}
+nav button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px 16px}
+.span2{grid-column:1/-1}
+label{display:block;font-weight:600;font-size:.88rem;margin-bottom:4px}
+label small{font-weight:400;color:var(--muted)}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px}
+textarea{min-height:70px;resize:vertical}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.hint{font-size:.8rem;color:var(--muted);margin-top:3px}
+.err{color:var(--bad);font-size:.82rem;margin-top:3px}
+.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:6px;padding:9px 16px;font:inherit;font-weight:600;cursor:pointer}
+.btn.alt{background:transparent;color:var(--ink);border:1px solid var(--line);font-weight:500}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pill{display:inline-block;border-radius:99px;padding:2px 10px;font-size:.78rem;font-weight:600}
+.ok{background:var(--ok-bg);color:var(--ok)}.warn{background:var(--warn-bg);color:var(--warn)}.bad{background:var(--bad-bg);color:var(--bad)}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:860px;font-size:.85rem}
+th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:600;white-space:nowrap}
+td.ts{white-space:nowrap;font-variant-numeric:tabular-nums}
+.mono{font-family:ui-monospace,Consolas,monospace;font-size:.78rem;word-break:break-all;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;max-width:92vw;z-index:20}
+.cond{display:none}.cond.on{display:block}
+fieldset{border:1px solid var(--line);border-radius:8px;margin:0 0 14px;padding:12px 14px}
+legend{font-weight:700;padding:0 6px;font-size:.92rem}
+@media print{nav,.bar button,.no-print{display:none}}
+</style>
+<script src="xlsx.full.min.js"></script>
+</head>
+<body>
+<main>
+<div id="stor" class="panel" hidden style="background:var(--warn-bg);color:var(--warn)"></div>
+<h1>UPSI sharing register</h1>
+<p class="sub">Structured digital database under Regulation 3(5) of the SEBI (Prohibition of Insider Trading) Regulations, 2015. Entries are time-stamped, chained by hash and cannot be edited or deleted. Mistakes are fixed with a correction entry.</p>
+
+<div class="bar">
+  <div class="row"><span id="chainPill" class="pill ok">Checking…</span><span id="count" class="hint"></span></div>
+  <div class="row no-print"><input id="company" placeholder="Company name" style="width:230px" aria-label="Company name"></div>
+</div>
+
+<nav role="tablist">
+  <button role="tab" aria-selected="true" data-tab="new">Record sharing</button>
+  <button role="tab" aria-selected="false" data-tab="dp">Designated persons</button>
+  <button role="tab" aria-selected="false" data-tab="reg">Register</button>
+  <button role="tab" aria-selected="false" data-tab="audit">Audit &amp; backup</button>
+</nav>
+
+<section id="tab-new">
+<div class="panel no-print"><div class="row"><b>Designated persons</b><span id="dpCount" class="hint"></span><label class="btn alt" style="margin:0;display:inline-block">Import list (Excel or CSV)<input id="dpFile" type="file" accept=".xlsx,.csv" hidden></label><button class="btn alt" type="button" onclick="dpSample()">Download sample Excel</button></div><div class="hint">Optional. Use the “Designated Persons” sheet of the Excel template. Once imported, picking a name below fills the designation and PAN/identifier. Manage the list under “Designated persons”.</div></div>
+<datalist id="dpl"></datalist>
+<form id="f" novalidate>
+<fieldset><legend>1. What is being shared</legend>
+<div class="grid">
+  <div><label for="cat">UPSI category <small>(Reg 2(1)(n))</small></label><select id="cat"></select></div>
+  <div><label for="ref">Project / reference code <small>(optional)</small></label><input id="ref" placeholder="e.g. Project Atlas"></div>
+  <div class="span2"><label for="nature">Nature of UPSI <small>(required)</small></label><textarea id="nature" placeholder="Describe the information shared, without disclosing sensitive figures"></textarea></div>
+  <div><label for="mode">Mode of sharing</label><select id="mode"><option>Email</option><option>Data room</option><option>Meeting / call</option><option>Physical document</option><option>Other</option></select></div>
+  <div><label for="sharedAt">When was it shared <small>(actual date and time)</small></label><input id="sharedAt" type="datetime-local"></div>
+</div></fieldset>
+
+<fieldset><legend>2. Who shared it</legend>
+<div class="grid">
+  <div><label for="byName">Name <small>(required)</small></label><input id="byName" list="dpl" autocomplete="off"></div>
+  <div><label for="byDesig">Designation</label><input id="byDesig"></div>
+  <div><label for="byIdT">ID type</label><select id="byIdT"><option>PAN</option><option>Other identifier authorised by law</option></select></div>
+  <div><label for="byId">PAN / identifier <small>(required)</small></label><input id="byId" autocapitalize="characters"></div>
+</div></fieldset>
+
+<fieldset><legend>3. Who received it</legend>
+<div class="grid">
+  <div><label for="toName">Name <small>(required)</small></label><input id="toName" list="dpl" autocomplete="off"></div>
+  <div><label for="toOrg">Organisation <small>(if any)</small></label><input id="toOrg"></div>
+  <div><label for="toType">Recipient type</label><select id="toType"></select></div>
+  <div></div>
+  <div><label for="toIdT">ID type</label><select id="toIdT"><option>PAN</option><option>Other identifier authorised by law</option></select></div>
+  <div><label for="toId">PAN / identifier <small>(required)</small></label><input id="toId" autocapitalize="characters"><div class="hint cond" id="altHint">Use another identifier only where PAN is not available.</div></div>
+</div></fieldset>
+
+<fieldset><legend>4. Why it was shared</legend>
+<div class="grid">
+  <div class="span2"><label for="purpose">Legitimate purpose <small>(Reg 3(1), 3(2A), 3(3))</small></label><select id="purpose"></select></div>
+  <div class="span2 cond" id="boardBox"><label for="boardRef">Board approval reference <small>(Reg 3(3): board’s informed opinion that sharing is in the company’s best interest)</small></label><input id="boardRef" placeholder="Meeting date / resolution no."><div class="hint" id="boardHint"></div></div>
+  <div class="span2 cond" id="otherBox"><label for="otherWhy">Explain the purpose</label><textarea id="otherWhy"></textarea></div>
+</div></fieldset>
+
+<fieldset><legend>5. Confidentiality &amp; source</legend>
+<div class="grid">
+  <div><label for="conf">Confidentiality safeguard <small>(Reg 3(2B), 3(4), 9A(2)(d))</small></label><select id="conf"><option>NDA signed</option><option>Notice served to maintain confidentiality</option><option>Pending</option></select></div>
+  <div><label for="confDate">Date of NDA / notice</label><input id="confDate" type="date"></div>
+  <div><label for="ext">Did the information come from outside the organisation?</label><select id="ext"><option value="no">No</option><option value="yes">Yes</option></select></div>
+  <div class="cond" id="rcvBox"><label for="rcvAt">Received on <small>(entry is due within 2 calendar days)</small></label><input id="rcvAt" type="datetime-local"></div>
+  <div class="span2"><label for="corr">Corrects earlier entry # <small>(only if this fixes a mistake)</small></label><input id="corr" type="number" min="1" style="max-width:160px"></div>
+</div></fieldset>
+
+<div class="row"><button class="btn" type="submit">Save entry</button><button class="btn alt" type="button" id="reset">Clear form</button><span class="hint">Only the fields marked “required” are compulsory under Reg 3(5). Everything else is optional. The time of saving is recorded automatically and cannot be changed afterwards.</span></div>
+<div id="errs" class="err" role="alert"></div>
+</form>
+</section>
+
+<section id="tab-dp" hidden>
+<div class="panel"><h2>Add or update a designated person</h2>
+<div class="grid">
+<input id="pUid" type="hidden">
+<div><label for="pName">Name <small>(required)</small></label><input id="pName"></div>
+<div><label for="pDesig">Designation</label><input id="pDesig"></div>
+<div><label for="pDept">Department</label><input id="pDept"></div>
+<div><label for="pDpid">DP ID</label><input id="pDpid"></div>
+<div><label for="pIdT">ID type</label><select id="pIdT"><option>PAN</option><option>Other identifier authorised by law</option></select></div>
+<div><label for="pId">PAN / identifier <small>(required)</small></label><input id="pId" autocapitalize="characters"></div>
+<div><label for="pPh">Mobile / phone numbers used <small>(required)</small></label><input id="pPh"></div>
+<div><label for="pEdu">Educational institutions <small>(one-time)</small></label><input id="pEdu"></div>
+<div><label for="pPast">Past employers <small>(one-time)</small></label><input id="pPast"></div>
+<div><label for="pDesAt">Date designated</label><input id="pDesAt" type="date"></div>
+<div><label for="pCeased">Date ceased</label><input id="pCeased" type="date"></div>
+<div><label for="pAnn">Last annual disclosure</label><input id="pAnn" type="date"></div>
+</div>
+<div class="row" style="margin-top:12px"><button class="btn" id="dpSave" type="button">Save designated person</button><button class="btn alt" id="dpClear" type="button">Clear</button><button class="btn alt" type="button" onclick="document.getElementById('dpFile').click()">Import from Excel or CSV</button><button class="btn alt" type="button" onclick="dpSample()">Download sample Excel</button></div>
+<div id="dpErr" class="err" role="alert"></div>
+<p class="hint">Every save is time-stamped and chained, and earlier versions stay in the log. To remove someone, set “Date ceased” instead of deleting.</p></div>
+<div class="panel"><div class="tw"><table style="min-width:640px"><thead><tr><th>Name</th><th>ID</th><th>Phones</th><th>Status</th><th></th></tr></thead><tbody id="dpBody"></tbody></table></div></div>
+<div class="panel"><h2>Immediate relatives and material financial relationships</h2>
+<div class="grid">
+<div><label for="rDp">Designated person</label><select id="rDp"></select></div>
+<div><label for="rName">Related person name <small>(required)</small></label><input id="rName"></div>
+<div><label for="rRel">Relationship</label><select id="rRel"><option>Immediate relative</option><option>Material financial relationship</option></select></div>
+<div><label for="rId">PAN / identifier <small>(required)</small></label><input id="rId" autocapitalize="characters"></div>
+</div>
+<div class="row" style="margin-top:12px"><button class="btn" id="rAdd" type="button">Add related person</button></div>
+<div id="relErr" class="err" role="alert"></div>
+<div class="tw" style="margin-top:10px"><table style="min-width:640px"><thead><tr><th>Designated person</th><th>Related person</th><th>Relationship</th><th>ID</th><th></th></tr></thead><tbody id="relBody"></tbody></table></div></div>
+</section>
+
+<section id="tab-reg" hidden>
+<div class="panel">
+  <div class="row" style="margin-bottom:12px"><input id="q" placeholder="Search by name, ID, project, category…" style="max-width:380px" aria-label="Search register"><button class="btn alt" id="csv">Export CSV</button><button class="btn alt" onclick="window.print()">Print</button></div>
+  <div class="tw"><table><thead><tr><th>#</th><th>Recorded at</th><th>UPSI</th><th>Shared by</th><th>Shared with</th><th>Purpose</th><th>Confidentiality</th><th>Flags</th></tr></thead><tbody id="rows"></tbody></table></div>
+  <p id="empty" class="hint">No entries yet. Use “Record sharing” to add the first one.</p>
+</div>
+</section>
+
+<section id="tab-audit" hidden>
+<div class="panel">
+  <h2>Verify integrity</h2>
+  <p class="hint" style="margin-top:0">Recomputes every hash from the first entry. Any change to a past entry, or any removed entry, breaks the chain from that point.</p>
+  <div class="row"><button class="btn" id="verify">Verify chain now</button><span id="vres"></span></div>
+</div>
+<div class="panel">
+  <h2>Backup and restore</h2>
+  <p class="hint" style="margin-top:0">This register is stored in this browser only. Download a backup regularly and keep it as the auditor’s copy. Regulation 3(6) requires preservation for at least eight years after the transaction is complete, or until any SEBI proceeding ends.</p>
+  <div class="row"><button class="btn" id="bk">Download backup (JSON)</button><button class="btn alt" id="xl">Export Excel workbook</button><label class="btn alt" style="margin:0;display:inline-block">Restore from backup<input id="rs" type="file" accept=".json,application/json" hidden></label></div>
+  <p class="hint">Restore only works into an empty register, and only if the backup’s chain verifies.</p>
+  <p class="hint">Time stamps use this device’s clock. For a stronger audit position, run this file on an internal server with a controlled clock, since the regulation expects the database to be maintained internally and not outsourced.</p>
+</div>
+</section>
+</main>
+<div id="toast" class="toast" hidden></div>
+
+<script>
+var CATS=["Financial results","Dividends","Change in capital structure","Merger, de-merger, acquisition, delisting, disposal, expansion, or contract award/termination outside normal course","Change in key managerial personnel","Change in rating(s) (other than ESG)","Fund raising proposed","Agreement impacting management or control","Fraud, default, or arrest of promoter/director/KMP","Resolution plan, restructuring or one-time settlement of borrowings","Winding-up / insolvency (IBC) matters","Forensic audit initiated or final report","Action or order by a regulatory, statutory, enforcement or judicial body","Outcome of litigation or dispute","Guarantee, indemnity or surety outside normal course","Key licence or regulatory approval granted/withdrawn","Other information likely to materially affect price"];
+var RTYPES=["Employee / designated person","Statutory or internal auditor","Legal advisor","Merchant banker","Other advisor or consultant","Lender","Customer / supplier / partner / collaborator","Insolvency professional","Regulator or authority","Other"];
+var PURP=[
+["adv","Ordinary course of business: advisor, auditor, banker, lawyer or consultant"],
+["biz","Ordinary course of business: lender, customer, supplier, partner or collaborator"],
+["ibc","Ordinary course of business: insolvency professional"],
+["duty","Performance of duties (internal need-to-know)"],
+["legal","Discharge of a legal obligation (regulator, exchange, court)"],
+["t3i","Reg 3(3)(i): transaction entailing an open offer, board-approved"],
+["t3ii","Reg 3(3)(ii): other transaction, board-approved, made public 2 trading days before"],
+["other","Other (explain)"]];
+var KD="upsi_register_v1",KC="upsi_company_v1",mem={d:null,c:""};
+var $=function(i){return document.getElementById(i)};
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function load(){try{var r=localStorage.getItem(KD);return r?JSON.parse(r):[]}catch(e){return mem.d||[]}}
+function save(a){mem.d=a;try{localStorage.setItem(KD,JSON.stringify(a))}catch(e){}}
+async function sha(s){var b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,"0")}).join("")}
+function hin(prev,id,ts,data){return prev+"|"+id+"|"+ts+"|"+JSON.stringify(data)}
+async function verify(a){var prev="0".repeat(64);for(var i=0;i<a.length;i++){var e=a[i];if(e.id!==i+1||e.prev!==prev||await sha(hin(prev,e.id,e.ts,e.data))!==e.hash)return{ok:false,at:e.id};prev=e.hash}return{ok:true}}
+function fill(sel,arr,pair){$(sel).innerHTML=arr.map(function(x){return pair?'<option value="'+x[0]+'">'+esc(x[1])+'</option>':'<option>'+esc(x)+'</option>'}).join("")}
+fill("cat",CATS);fill("toType",RTYPES);fill("purpose",PURP,true);
+function toast(m){var t=$("toast");t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(function(){t.hidden=true},3500)}
+function nowLocal(){var d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16)}
+function stamp(){var d=new Date(),o=-d.getTimezoneOffset(),s=o>=0?"+":"-",p=function(n){return String(Math.floor(Math.abs(n))).padStart(2,"0")};
+ var l=new Date(d.getTime()+o*60000).toISOString().slice(0,19);return l+s+p(o/60)+":"+p(o%60)}
+function dayNum(s){var p=s.slice(0,10).split("-");return Date.UTC(+p[0],+p[1]-1,+p[2])/864e5}
+$("sharedAt").value=nowLocal();
+function cond(){var p=$("purpose").value;$("boardBox").classList.toggle("on",p==="t3i"||p==="t3ii");$("otherBox").classList.toggle("on",p==="other");
+ $("boardHint").textContent=p==="t3i"?"Board must also require the parties to sign confidentiality and non-disclosure agreements (Reg 3(4)).":p==="t3ii"?"UPSI must be made generally available at least two trading days before the transaction, and parties must sign NDAs (Reg 3(4)).":"";
+ $("rcvBox").classList.toggle("on",$("ext").value==="yes");
+ $("altHint").classList.toggle("on",$("toIdT").selectedIndex===1||$("byIdT").selectedIndex===1)}
+["purpose","ext","toIdT","byIdT"].forEach(function(i){$(i).addEventListener("change",cond)});cond();
+document.querySelectorAll("nav button").forEach(function(b){b.addEventListener("click",function(){document.querySelectorAll("nav button").forEach(function(x){x.setAttribute("aria-selected",x===b)});["new","dp","reg","audit"].forEach(function(t){$("tab-"+t).hidden=t!==b.dataset.tab});if(b.dataset.tab==="reg")render()})});
+var PAN=/^[A-Z]{5}[0-9]{4}[A-Z]$/;
+function v(i){return $(i).value.trim()}
+$("f").addEventListener("submit",async function(ev){ev.preventDefault();
+ var er=[],p=v("purpose"),a=load();
+ if(!window.crypto||!crypto.subtle){$("errs").textContent="This browser cannot create the tamper-proof hash. Open the page over https in a current browser.";return}
+ if(!v("nature"))er.push("Describe the nature of the UPSI.");
+ 
+ if(v("sharedAt")>nowLocal())er.push("The sharing date and time cannot be in the future.");
+ [["by","the person who shared"],["to","the recipient"]].forEach(function(x){
+  if(!v(x[0]+"Name"))er.push("Enter the name of "+x[1]+".");
+  var id=v(x[0]+"Id").toUpperCase();
+  if(!id)er.push("Enter the PAN or identifier of "+x[1]+".");
+  else if($(x[0]+"IdT").selectedIndex===0&&!PAN.test(id))er.push("PAN of "+x[1]+" must look like ABCDE1234F. If PAN is not available, choose the other identifier.")});
+ 
+ 
+ 
+ 
+ if($("ext").value==="yes"&&v("rcvAt")>nowLocal())er.push("Received time cannot be in the future.");
+ if(v("corr")&&(+v("corr")<1||+v("corr")>a.length))er.push("Entry # to correct does not exist.");
+ if(er.length){$("errs").innerHTML=er.map(esc).join("<br>");return}
+ $("errs").textContent="";
+ var ts=stamp(),data={category:v("cat"),project:v("ref"),nature:v("nature"),mode:v("mode"),sharedAt:v("sharedAt"),
+  by:{name:v("byName"),designation:v("byDesig"),idType:$("byIdT").value,id:v("byId").toUpperCase()},
+  to:{name:v("toName"),org:v("toOrg"),type:$("toType").value,idType:$("toIdT").value,id:v("toId").toUpperCase()},
+  purpose:$("purpose").selectedOptions[0].textContent,purposeNote:p==="other"?v("otherWhy"):(v("boardRef")||""),
+  confidentiality:$("conf").value,confidentialityDate:v("confDate"),
+  external:$("ext").value==="yes",receivedAt:$("ext").value==="yes"?v("rcvAt"):"",corrects:v("corr")?+v("corr"):null,
+  lateEntry:$("ext").value==="yes"&&dayNum(ts)-dayNum(v("rcvAt"))>2};
+ var prev=a.length?a[a.length-1].hash:"0".repeat(64),id=a.length+1;
+ a.push({id:id,ts:ts,prev:prev,hash:await sha(hin(prev,id,ts,data)),data:data});save(a);
+ ["nature","ref","byName","byDesig","byId","toName","toOrg","toId","boardRef","otherWhy","corr","rcvAt"].forEach(function(i){$(i).value=""});$("sharedAt").value=nowLocal();cond();
+ toast("Entry #"+id+" saved at "+ts.replace("T"," "));status()});
+$("reset").addEventListener("click",function(){$("f").reset();$("sharedAt").value=nowLocal();$("errs").textContent="";cond()});
+function flags(e){var d=e.data,f=[];if(d.lateEntry)f.push('<span class="pill bad">Entered after 2 days</span>');if(d.confidentiality==="Pending")f.push('<span class="pill warn">Confidentiality pending</span>');if(d.corrects)f.push('<span class="pill warn">Corrects #'+d.corrects+'</span>');return f.join(" ")}
+function render(){var a=load(),q=$("q").value.toLowerCase();
+ var r=a.filter(function(e){return!q||JSON.stringify(e.data).toLowerCase().indexOf(q)>-1}).reverse();
+ $("empty").hidden=a.length>0;
+ $("rows").innerHTML=r.map(function(e){var d=e.data;return"<tr><td>"+e.id+'</td><td class="ts">'+esc(e.ts.replace("T","<br>"))+"</td><td><b>"+esc(d.category)+"</b>"+(d.project?" ("+esc(d.project)+")":"")+"<br>"+esc(d.nature)+"</td><td>"+esc(d.by.name)+"<br>"+esc(d.by.designation)+'<div class="mono">'+esc(d.by.id)+"</div></td><td>"+esc(d.to.name)+(d.to.org?", "+esc(d.to.org):"")+"<br>"+esc(d.to.type)+'<div class="mono">'+esc(d.to.id)+"</div></td><td>"+esc(d.purpose)+(d.purposeNote?"<br>"+esc(d.purposeNote):"")+"</td><td>"+esc(d.confidentiality)+(d.confidentialityDate?"<br>"+esc(d.confidentialityDate):"")+"</td><td>"+flags(e)+"</td></tr>"}).join("")}
+$("q").addEventListener("input",render);
+async function status(){var a=load(),r=await verify(a),rd=await verify(dload()),p=$("chainPill");if(r.ok&&!rd.ok)r={ok:false,at:rd.at+" of the designated-persons log"};$("count").textContent=a.length+(a.length===1?" entry":" entries");
+ p.className="pill "+(r.ok?"ok":"bad");p.textContent=r.ok?"Chain intact":"Chain broken at entry #"+r.at;return r}
+$("verify").addEventListener("click",async function(){var r=await status();$("vres").innerHTML=r.ok?'<span class="pill ok">All '+load().length+" entries verified</span>":'<span class="pill bad">Tampering detected at entry #'+r.at+"</span>"});
+async function dl(name,data){try{if(window.claude){var d=await claude.use("downloads");if(!d)return toast("Saving files is not available in this view.");await d.save({filename:name,data:data});return toast("Saved "+name)}var u=URL.createObjectURL(new Blob([data])),a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},500);toast("Saved "+name)}catch(e){if(!e||e.code!=="declined")toast("Could not save the file.")}}
+$("bk").addEventListener("click",function(){dl("upsi-register-backup-"+stamp().slice(0,10)+".json",JSON.stringify({company:$("company").value,exportedAt:stamp(),entries:load(),dp:dload()},null,1),"application/json")});
+$("rs").addEventListener("change",async function(ev){var f=ev.target.files[0];if(!f)return;
+ try{var j=JSON.parse(await f.text());if(load().length)return toast("Register is not empty. Restore works only into an empty register.");
+  var r=await verify(j.entries);if(!r.ok)return toast("Backup failed verification at entry #"+r.at+". Not restored.");
+  if(j.dp&&j.dp.length){var rd=await verify(j.dp);if(!rd.ok)return toast("Designated-persons log failed verification at entry #"+rd.at+". Not restored.");mem.p=j.dp;try{localStorage.setItem(KP,JSON.stringify(j.dp))}catch(e){}derive()}save(j.entries);if(j.company){$("company").value=j.company;lc(j.company)}toast("Restored "+j.entries.length+" entries.");status();render()}catch(e){toast("Could not read that file.")}ev.target.value=""});
+function regCsv(){var h=["Entry","Recorded at","Category","Project","Nature","Mode","Shared at","Shared by","Designation","Sharer ID type","Sharer ID","Shared with","Organisation","Recipient type","Recipient ID type","Recipient ID","Purpose","Purpose note","Confidentiality","Confidentiality date","From outside","Received at","Late entry","Corrects entry","Hash"];
+ var q=function(x){return'"'+String(x==null?"":x).replace(/"/g,'""')+'"'};
+ var rows=load().map(function(e){var d=e.data;return[e.id,e.ts,d.category,d.project,d.nature,d.mode,d.sharedAt,d.by.name,d.by.designation,d.by.idType,d.by.id,d.to.name,d.to.org,d.to.type,d.to.idType,d.to.id,d.purpose,d.purposeNote,d.confidentiality,d.confidentialityDate,d.external?"Yes":"No",d.receivedAt,d.lateEntry?"Yes":"No",d.corrects||"",e.hash].map(q).join(",")});
+ return[h.map(q).join(",")].concat(rows).join("\r\n")}
+$("csv").addEventListener("click",function(){dl("upsi-register-"+stamp().slice(0,10)+".csv","\ufeff"+regCsv())});
+$("xl").addEventListener("click",function(){if(!window.XLSX)return toast("The Excel writer did not load. Use Export CSV in the Register tab.");var W=XLSX.utils.book_new(),S=function(rows,n){XLSX.utils.book_append_sheet(W,XLSX.utils.aoa_to_sheet(rows),n)};
+ S([["DP ID","Name","Designation","Department","ID type","PAN / identifier","Mobile / phone numbers used","Educational institutions graduated from (one-time)","Past employers (one-time)","Date designated","Date ceased","Last annual disclosure date"]].concat(DPS.map(function(d){return[d.dpid,d.name,d.designation,d.dept,d.idType,d.id,d.phones,d.edu,d.past,d.designated,d.ceased,d.annual]})),"Designated Persons");
+ S([["Designated person (name)","Related person name","Relationship","ID type","PAN / identifier"]].concat(REL.map(function(r){return[r.dp,r.name,r.rel,"",r.id]})),"DP Related Persons");
+ W.SheetNames.push("UPSI Register");W.Sheets["UPSI Register"]=XLSX.read(regCsv(),{type:"string"}).Sheets.Sheet1;
+ dl("upsi-register-"+stamp().slice(0,10)+".xlsx",XLSX.write(W,{bookType:"xlsx",type:"array"}))});
+function lc(c){try{localStorage.setItem(KC,c)}catch(e){mem.c=c}}
+try{$("company").value=localStorage.getItem(KC)||""}catch(e){}
+$("company").addEventListener("input",function(){lc($("company").value)});
+var KP="upsi_dpchain_v1",DPS=[],REL=[],Q=Promise.resolve();
+function dload(){try{return JSON.parse(localStorage.getItem(KP)||"[]")}catch(e){return mem.p||[]}}
+async function push1(data){var a=dload(),prev=a.length?a[a.length-1].hash:"0".repeat(64),id=a.length+1,ts=stamp();a.push({id:id,ts:ts,prev:prev,hash:await sha(hin(prev,id,ts,data)),data:data});mem.p=a;try{localStorage.setItem(KP,JSON.stringify(a))}catch(e){}derive()}
+function dpush(data){Q=Q.then(function(){return push1(data)}).catch(function(){});return Q}
+function derive(){var m={},rl={};dload().forEach(function(e){var d=e.data;if(d.type==="dp")m[d.p.uid]=d.p;else if(d.type==="rel")rl[d.r.uid]=d.r;else if(d.type==="relx")delete rl[d.uid]});DPS=Object.keys(m).map(function(k){return m[k]});REL=Object.keys(rl).map(function(k){return rl[k]});dpDraw();status()}
+function dpDrawOld(){$("dpl").innerHTML=DPS.map(function(d){return'<option value="'+esc(d.name)+'">'+esc(d.designation||"")+'</option>'}).join("");$("dpCount").textContent=DPS.length?DPS.length+" loaded":"none loaded"}
+function dpFill(p){var d=DPS.filter(function(x){return x.name.toLowerCase()===v(p+"Name").toLowerCase()})[0];if(!d)return;if(p==="by")$("byDesig").value=d.designation||"";$(p+"IdT").selectedIndex=(!d.idType||/^pan/i.test(d.idType))?0:1;$(p+"Id").value=d.id||"";cond()}
+["by","to"].forEach(function(p){$(p+"Name").addEventListener("change",function(){dpFill(p)})});
+function dpRows(rows){var m=function(r,k){for(var x in r){if(x.toLowerCase().replace(/[^a-z]/g,"").indexOf(k)===0)return String(r[x]==null?"":r[x]).trim()}return""};
+ var out=rows.map(function(r){var o={dpid:m(r,"dpid"),name:m(r,"name"),designation:m(r,"designation"),dept:m(r,"department"),idType:m(r,"idtype"),id:m(r,"pan").toUpperCase(),phones:m(r,"mobile"),edu:m(r,"educational"),past:m(r,"past"),designated:m(r,"datedesignated"),ceased:m(r,"dateceased"),annual:m(r,"lastannual")};var ex=DPS.filter(function(d){return(o.id&&d.id===o.id)||d.name.toLowerCase()===o.name.toLowerCase()})[0];o.uid=ex?ex.uid:"u"+Date.now().toString(36)+Math.random().toString(36).slice(2,7);return o}).filter(function(d){return d.name&&!/^\(example\)/i.test(d.name)});
+ if(!out.length)return toast("No people found. Use the Designated Persons sheet of the template, with its heading row.");
+ (async function(){for(var i=0;i<out.length;i++)await dpush({type:"dp",action:"import",p:out[i]});toast(out.length+" designated persons loaded.")})()}
+function csvRows(t){var r=[],row=[],c="",q=false;for(var i=0;i<t.length;i++){var ch=t[i];if(q){if(ch==='"'&&t[i+1]==='"'){c+='"';i++}else if(ch==='"')q=false;else c+=ch}else if(ch==='"')q=true;else if(ch===","){row.push(c);c=""}else if(ch==="\n"||ch==="\r"){if(ch==="\r"&&t[i+1]==="\n")i++;row.push(c);c="";r.push(row);row=[]}else c+=ch}
+ if(c||row.length){row.push(c);r.push(row)}var h=(r.shift()||[]).map(function(x){return x.replace(/^\ufeff/,"")});return r.map(function(a){var o={};h.forEach(function(k,i){o[k]=a[i]});return o})}
+$("dpFile").addEventListener("change",function(ev){var f=ev.target.files[0];if(!f)return;var csv=/\.csv$/i.test(f.name),rd=new FileReader();
+ rd.onload=function(){try{var rows;if(csv)rows=csvRows(rd.result);else if(window.XLSX){var wb=XLSX.read(rd.result,{type:"array"}),ws=wb.Sheets["Designated Persons"]||wb.Sheets[wb.SheetNames[0]];rows=XLSX.utils.sheet_to_json(ws,{defval:"",raw:false})}else return toast("The Excel reader did not load. Save the sheet as CSV and import that.");dpRows(rows);if(!csv&&window.XLSX&&wb.Sheets["DP Related Persons"])relImport(XLSX.utils.sheet_to_json(wb.Sheets["DP Related Persons"],{defval:"",raw:false}))}catch(e){toast("Could not read that file.")}};
+ if(csv)rd.readAsText(f);else rd.readAsArrayBuffer(f);ev.target.value=""});
+function dpDraw(){$("dpl").innerHTML=DPS.map(function(d){return'<option value="'+esc(d.name)+'">'+esc(d.designation||"")+'</option>'}).join("");$("dpCount").textContent=DPS.length?DPS.length+" loaded":"none loaded";
+ $("dpBody").innerHTML=DPS.map(function(d){return"<tr><td>"+esc(d.name)+"<br>"+esc(d.designation||"")+'</td><td class="mono">'+esc(d.id)+"</td><td>"+esc(d.phones)+'</td><td><span class="pill '+(d.ceased?"warn":"ok")+'">'+(d.ceased?"Ceased "+esc(d.ceased):"Active")+'</span></td><td><button class="btn alt" data-e="'+esc(d.uid)+'">Edit</button></td></tr>'}).join("");
+ $("rDp").innerHTML=DPS.map(function(d){return"<option>"+esc(d.name)+"</option>"}).join("");
+ $("relBody").innerHTML=REL.map(function(r){return"<tr><td>"+esc(r.dp)+"</td><td>"+esc(r.name)+"</td><td>"+esc(r.rel)+'</td><td class="mono">'+esc(r.id)+'</td><td><button class="btn alt" data-x="'+esc(r.uid)+'">Remove</button></td></tr>'}).join("")}
+var PF={pName:"name",pDesig:"designation",pDept:"dept",pDpid:"dpid",pId:"id",pPh:"phones",pEdu:"edu",pPast:"past",pDesAt:"designated",pCeased:"ceased",pAnn:"annual"};
+function dpClr(){$("pUid").value="";Object.keys(PF).forEach(function(k){$(k).value=""});$("pIdT").selectedIndex=0;$("dpErr").textContent=""}
+$("dpClear").addEventListener("click",dpClr);
+$("dpBody").addEventListener("click",function(ev){var u=ev.target.dataset&&ev.target.dataset.e;if(!u)return;var d=DPS.filter(function(x){return x.uid===u})[0];if(!d)return;$("pUid").value=u;Object.keys(PF).forEach(function(k){$(k).value=d[PF[k]]||""});$("pIdT").selectedIndex=(!d.idType||/^pan/i.test(d.idType))?0:1;window.scrollTo(0,0)});
+$("dpSave").addEventListener("click",async function(){var e=[],id=v("pId").toUpperCase();
+ if(!v("pName"))e.push("Enter the name.");
+ if(!id)e.push("Enter the PAN or identifier.");else if($("pIdT").selectedIndex===0&&!PAN.test(id))e.push("PAN must look like ABCDE1234F. If PAN is not available, choose the other identifier.");
+ if(!v("pPh"))e.push("Enter the phone or mobile numbers used.");
+ $("dpErr").innerHTML=e.map(esc).join("<br>");if(e.length)return;
+ var uid=$("pUid").value||"u"+Date.now().toString(36)+Math.random().toString(36).slice(2,7),p={uid:uid,idType:$("pIdT").value};Object.keys(PF).forEach(function(k){p[PF[k]]=v(k)});p.id=id;
+ await dpush({type:"dp",action:$("pUid").value?"update":"add",p:p});dpClr();toast("Saved.")});
+$("rAdd").addEventListener("click",async function(){var id=v("rId").toUpperCase(),e=[];if(!$("rDp").value)e.push("Add a designated person first.");if(!v("rName"))e.push("Enter the related person’s name.");if(!id)e.push("Enter the PAN or identifier.");$("relErr").innerHTML=e.map(esc).join("<br>");if(e.length)return;
+ await dpush({type:"rel",r:{uid:"r"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),dp:$("rDp").value,name:v("rName"),rel:$("rRel").value,id:id}});$("rName").value="";$("rId").value="";toast("Added.")});
+$("relBody").addEventListener("click",async function(ev){var u=ev.target.dataset&&ev.target.dataset.x;if(!u)return;await dpush({type:"relx",uid:u});toast("Removed. The earlier entry stays in the log.")});
+async function relImport(rows){var m=function(r,k){for(var x in r){if(x.toLowerCase().replace(/[^a-z]/g,"").indexOf(k)===0)return String(r[x]==null?"":r[x]).trim()}return""},n=0;
+ for(var i=0;i<rows.length;i++){var r=rows[i],o={uid:"r"+Date.now().toString(36)+i,dp:m(r,"designatedperson"),name:m(r,"relatedperson"),rel:m(r,"relationship"),id:m(r,"pan").toUpperCase()};if(!o.name||/^\(example\)/i.test(o.name)||REL.some(function(x){return x.dp===o.dp&&x.name===o.name&&x.id===o.id}))continue;await dpush({type:"rel",r:o});n++}
+ if(n)toast(n+" related persons loaded.")}
+function dpSample(){if(!window.XLSX)return toast("The Excel writer did not load. Check your connection and try again.");
+ var W=XLSX.utils.book_new(),S=function(rows,n,w){var s=XLSX.utils.aoa_to_sheet(rows);s["!cols"]=w.map(function(x){return{wch:x}});XLSX.utils.book_append_sheet(W,s,n)};
+ S([["DP ID","Name *","Designation","Department","ID type","PAN / identifier *","Mobile / phone numbers used *","Educational institutions graduated from (one-time)","Past employers (one-time)","Date designated","Date ceased","Last annual disclosure date"],
+ ["DP-001","(Example) Anita Rao","Chief Financial Officer","Finance","PAN","ABCDE1234F","9800000001, 9800000002","IIM Ahmedabad; Delhi University","Example Industries Ltd","2024-04-01","","2026-04-15"],
+ ["DP-002","(Example) Vikram Shah","Company Secretary","Secretarial","PAN","BCDEF2345G","9800000003","ICSI; Mumbai University","Sample Textiles Ltd","2023-07-10","","2026-04-18"],
+ ["DP-003","(Example) Meera Iyer","Consultant","Strategy","Other identifier authorised by law","Passport N1234567","9800000004","","","2025-01-05","2026-03-31","2026-03-20"]],"Designated Persons",[10,26,24,16,32,22,28,42,28,14,14,22]);
+ S([["Designated person (name) *","Related person name *","Relationship *","ID type","PAN / identifier *"],["(Example) Anita Rao","(Example) Suresh Rao","Immediate relative","PAN","PQRSX5678L"],["(Example) Anita Rao","(Example) Rao Family Trust","Material financial relationship","PAN","AAATR1234K"]],"DP Related Persons",[28,28,32,12,22]);
+ S([["Field","Required","Basis","Note"],
+ ["Name","Yes","Reg 3(5), 9A(2)(a)","Full name. Rows starting with (Example) are skipped on import, so replace them with real people. Keep row 1 headings unchanged."],
+ ["PAN / identifier","Yes","Reg 3(5)","PAN, or another identifier authorised by law where PAN is not available (then set ID type to the second option)."],
+ ["Mobile / phone numbers used","Yes","Schedule B, clause 14(c)","All numbers the designated person uses, separated by commas."],
+ ["Educational institutions, past employers","No (disclose once)","Schedule B, clause 14","Not forced by this tool, but designated persons must disclose them once."],
+ ["Designation, department, DP ID","No","Reg 9A(2)(a)","Helpful for identifying designated persons."],
+ ["Dates designated, ceased, last annual disclosure","No","Schedule B, clause 14","Use YYYY-MM-DD. Set Date ceased when someone stops being a designated person. Disclosures are due annually and when details change."],
+ ["DP Related Persons sheet","Per row: all starred","Schedule B, clause 14(a), (b)","One row per immediate relative or person with a material financial relationship: designated person’s name, related person’s name, relationship, and PAN or identifier."]],"Read me",[40,20,30,90]);
+ dl("UPSI_designated_persons_sample.xlsx",XLSX.write(W,{bookType:"xlsx",type:"array"}))}
+function stChk(){var ok=false;try{localStorage.setItem("upsi_t","1");ok=localStorage.getItem("upsi_t")==="1";localStorage.removeItem("upsi_t")}catch(e){}var b=$("stor");b.hidden=ok;if(!ok)b.textContent="This browser is blocking storage for this page, so nothing you enter will be kept after you close the tab. Open the page in a normal (not private) browser window, or download a backup before closing."}
+stChk();
+derive();
+status();
+</script>
+</body>
+</html>
