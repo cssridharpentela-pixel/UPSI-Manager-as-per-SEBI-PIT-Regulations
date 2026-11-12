@@ -27,7 +27,7 @@ jobs:
         run: npm install
 
       - name: Build Windows Installer
-        run: npm run dist
+        run: npm run dist -- --publish never
 
       - name: Upload EXE Installer
         uses: actions/upload-artifact@v4
