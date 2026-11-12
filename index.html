@@ -5,61 +5,74 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>UPSI Sharing Register</title>
 <style>
-:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
---bg:#f2f5f7;--surface:#fff;--ink:#17232f;--muted:#5b6b78;--line:#d3dce3;--accent:#0e5a63;--accent-ink:#fff;--warn-bg:#fff1d6;--warn:#8a5a00;--ok-bg:#dff3e6;--ok:#17653a;--bad-bg:#fde0de;--bad:#a1241b}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#10181f;--surface:#18232c;--ink:#e6edf2;--muted:#9aaab6;--line:#2b3a46;--accent:#4fb3bf;--accent-ink:#06242a;--warn-bg:#3a2d10;--warn:#f0c168;--ok-bg:#123524;--ok:#7fd6a0;--bad-bg:#431a17;--bad:#ff9d94}}
-:root[data-theme="dark"]{color-scheme:dark;--bg:#10181f;--surface:#18232c;--ink:#e6edf2;--muted:#9aaab6;--line:#2b3a46;--accent:#4fb3bf;--accent-ink:#06242a;--warn-bg:#3a2d10;--warn:#f0c168;--ok-bg:#123524;--ok:#7fd6a0;--bad-bg:#431a17;--bad:#ff9d94}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#eef2f7;--surface:#fff;--ink:#0f1c2e;--muted:#5b6b7e;--line:#dce4ee;--soft:#f6f9fc;--accent:#0f766e;--accent-ink:#fff;--warn-bg:#fff1d6;--warn:#8a5a00;--ok-bg:#dcf3e5;--ok:#17653a;--bad-bg:#fde2df;--bad:#a1241b;--hero1:#0b2545;--hero2:#134074;--shadow:0 1px 2px rgba(15,28,46,.06),0 10px 28px rgba(15,28,46,.07);--ring:rgba(15,118,110,.2)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0c141c;--surface:#15212c;--ink:#e8eef4;--muted:#9fb0bf;--line:#273746;--soft:#101b25;--accent:#2dd4bf;--accent-ink:#04211e;--warn-bg:#3a2d10;--warn:#f0c168;--ok-bg:#123524;--ok:#7fd6a0;--bad-bg:#431a17;--bad:#ff9d94;--hero1:#07131f;--hero2:#0f2a44;--shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.35);--ring:rgba(45,212,191,.25)}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0c141c;--surface:#15212c;--ink:#e8eef4;--muted:#9fb0bf;--line:#273746;--soft:#101b25;--accent:#2dd4bf;--accent-ink:#04211e;--warn-bg:#3a2d10;--warn:#f0c168;--ok-bg:#123524;--ok:#7fd6a0;--bad-bg:#431a17;--bad:#ff9d94;--hero1:#07131f;--hero2:#0f2a44;--shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.35);--ring:rgba(45,212,191,.25)}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *,*::before,*::after{box-sizing:inherit}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif}
-main{max-width:1080px;margin:0 auto;padding:20px 16px 48px}
-h1{font-size:1.5rem;margin:0 0 4px;letter-spacing:-.01em}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 "Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif}
+.hero{background:linear-gradient(120deg,var(--hero1),var(--hero2));color:#fff}
+.hero .wrap{max-width:1120px;margin:0 auto;padding:22px 20px;display:flex;flex-wrap:wrap;gap:14px 20px;align-items:center;justify-content:space-between}
+.brand{display:flex;gap:14px;align-items:center}
+.logo{width:46px;height:46px;border-radius:12px;background:rgba(255,255,255,.14);display:grid;place-items:center;font-size:24px}
+.hero h1{margin:0;font-size:1.4rem;letter-spacing:-.01em;color:#fff}
+.hero p{margin:2px 0 0;color:#c4d3e3;font-size:.85rem}
+.hr{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.hero .hint{color:#c4d3e3;margin:0}
+.hero input{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.28);color:#fff;width:220px}
+.hero input::placeholder{color:#b4c5d8}
+main{max-width:1120px;margin:0 auto;padding:18px 20px 64px}
 h2{font-size:1.05rem;margin:0 0 12px}
-.sub{color:var(--muted);margin:0 0 16px;max-width:70ch}
-.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:16px}
-nav{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:18px;overflow-x:auto}
-nav button{background:none;border:0;border-bottom:3px solid transparent;padding:10px 14px;font:inherit;color:var(--muted);cursor:pointer;white-space:nowrap}
-nav button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:16px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px 16px}
+nav{display:flex;gap:6px;margin:0 0 18px;padding:5px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto}
+nav button{border:0;background:none;border-radius:8px;padding:9px 16px;color:var(--muted);font:inherit;cursor:pointer;white-space:nowrap}
+nav button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.panel,fieldset{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:20px 22px;margin:0 0 16px;min-width:0}
+form{counter-reset:s}
+legend{float:left;width:100%;display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.02rem;padding:0;margin:0 0 14px}legend+*{clear:both}
+legend::before{counter-increment:s;content:counter(s);width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:.8rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px 18px}
 .span2{grid-column:1/-1}
-label{display:block;font-weight:600;font-size:.88rem;margin-bottom:4px}
+label{display:block;font-weight:600;font-size:.84rem;margin-bottom:5px}
 label small{font-weight:400;color:var(--muted)}
-input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px}
-textarea{min-height:70px;resize:vertical}
-input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
-.hint{font-size:.8rem;color:var(--muted);margin-top:3px}
-.err{color:var(--bad);font-size:.82rem;margin-top:3px}
-.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:6px;padding:9px 16px;font:inherit;font-weight:600;cursor:pointer}
-.btn.alt{background:transparent;color:var(--ink);border:1px solid var(--line);font-weight:500}
-.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.pill{display:inline-block;border-radius:99px;padding:2px 10px;font-size:.78rem;font-weight:600}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+textarea{min-height:78px;resize:vertical}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:0;border-color:var(--accent);box-shadow:0 0 0 3px var(--ring)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.hint{font-size:.8rem;color:var(--muted);margin-top:4px}
+.err{color:var(--bad);font-size:.85rem;margin:8px 0}
+.btn{background:var(--accent);color:var(--accent-ink);border:1px solid var(--accent);border-radius:10px;padding:10px 18px;font:inherit;font-weight:600;cursor:pointer;display:inline-block}
+.btn:hover{filter:brightness(1.08)}
+.btn.alt{background:var(--surface);color:var(--ink);border-color:var(--line);font-weight:500}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.actions{position:sticky;bottom:0;display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);z-index:5}
+.actions .hint{flex:1;min-width:200px;margin:0}
+.pill{display:inline-block;border-radius:99px;padding:3px 11px;font-size:.78rem;font-weight:600}
 .ok{background:var(--ok-bg);color:var(--ok)}.warn{background:var(--warn-bg);color:var(--warn)}.bad{background:var(--bad-bg);color:var(--bad)}
+.rc{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:14px 16px;margin-bottom:12px;background:var(--soft)}
+.rch{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.rch .btn{padding:5px 12px;font-size:.82rem}
+.rl+.rl{border-top:1px dashed var(--line);margin-top:6px;padding-top:6px}
 .tw{overflow-x:auto}
 table{border-collapse:collapse;width:100%;min-width:860px;font-size:.85rem}
-th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}
-th{color:var(--muted);font-weight:600;white-space:nowrap}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:600;white-space:nowrap;background:var(--soft);position:sticky;top:0}
+tbody tr:nth-child(even) td{background:var(--soft)}
 td.ts{white-space:nowrap;font-variant-numeric:tabular-nums}
 .mono{font-family:ui-monospace,Consolas,monospace;font-size:.78rem;word-break:break-all;color:var(--muted)}
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;max-width:92vw;z-index:20}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:10px;max-width:92vw;z-index:20;box-shadow:var(--shadow)}
 .cond{display:none}.cond.on{display:block}
-fieldset{border:1px solid var(--line);border-radius:8px;margin:0 0 14px;padding:12px 14px}
-legend{font-weight:700;padding:0 6px;font-size:.92rem}
-@media print{nav,.bar button,.no-print{display:none}}
+@media (max-width:600px){.hero input{width:100%}fieldset,.panel{padding:16px}}
+@media print{nav,.btn,.no-print,.actions,.hero input{display:none}.hero{background:none;color:#000}.hero h1,.hero p,.hero .hint{color:#000}}
 </style>
-<script src="xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
+<header class="hero"><div class="wrap">
+  <div class="brand"><div class="logo" aria-hidden="true">🔏</div><div><h1>UPSI Sharing Register</h1><p>Structured digital database · SEBI (PIT) Regulations, 2015 · Reg 3(5) · Time-stamped, hash-chained, no edits or deletes</p></div></div>
+  <div class="hr"><span id="chainPill" class="pill ok">Checking…</span><span id="count" class="hint"></span><input id="company" placeholder="Company name" aria-label="Company name"></div>
+</div></header>
 <main>
 <div id="stor" class="panel" hidden style="background:var(--warn-bg);color:var(--warn)"></div>
-<h1>UPSI sharing register</h1>
-<p class="sub">Structured digital database under Regulation 3(5) of the SEBI (Prohibition of Insider Trading) Regulations, 2015. Entries are time-stamped, chained by hash and cannot be edited or deleted. Mistakes are fixed with a correction entry.</p>
-
-<div class="bar">
-  <div class="row"><span id="chainPill" class="pill ok">Checking…</span><span id="count" class="hint"></span></div>
-  <div class="row no-print"><input id="company" placeholder="Company name" style="width:230px" aria-label="Company name"></div>
-</div>
-
 <nav role="tablist">
   <button role="tab" aria-selected="true" data-tab="new">Record sharing</button>
   <button role="tab" aria-selected="false" data-tab="dp">Designated persons</button>
@@ -71,7 +84,7 @@ legend{font-weight:700;padding:0 6px;font-size:.92rem}
 <div class="panel no-print"><div class="row"><b>Designated persons</b><span id="dpCount" class="hint"></span><label class="btn alt" style="margin:0;display:inline-block">Import list (Excel or CSV)<input id="dpFile" type="file" accept=".xlsx,.csv" hidden></label><button class="btn alt" type="button" onclick="dpSample()">Download sample Excel</button></div><div class="hint">Optional. Use the “Designated Persons” sheet of the Excel template. Once imported, picking a name below fills the designation and PAN/identifier. Manage the list under “Designated persons”.</div></div>
 <datalist id="dpl"></datalist>
 <form id="f" novalidate>
-<fieldset><legend>1. What is being shared</legend>
+<fieldset><legend>What is being shared</legend>
 <div class="grid">
   <div><label for="cat">UPSI category <small>(Reg 2(1)(n))</small></label><select id="cat"></select></div>
   <div><label for="ref">Project / reference code <small>(optional)</small></label><input id="ref" placeholder="e.g. Project Atlas"></div>
@@ -80,7 +93,7 @@ legend{font-weight:700;padding:0 6px;font-size:.92rem}
   <div><label for="sharedAt">When was it shared <small>(actual date and time)</small></label><input id="sharedAt" type="datetime-local"></div>
 </div></fieldset>
 
-<fieldset><legend>2. Who shared it</legend>
+<fieldset><legend>Who shared it</legend>
 <div class="grid">
   <div><label for="byName">Name <small>(required)</small></label><input id="byName" list="dpl" autocomplete="off"></div>
   <div><label for="byDesig">Designation</label><input id="byDesig"></div>
@@ -88,33 +101,27 @@ legend{font-weight:700;padding:0 6px;font-size:.92rem}
   <div><label for="byId">PAN / identifier <small>(required)</small></label><input id="byId" autocapitalize="characters"></div>
 </div></fieldset>
 
-<fieldset><legend>3. Who received it</legend>
-<div class="grid">
-  <div><label for="toName">Name <small>(required)</small></label><input id="toName" list="dpl" autocomplete="off"></div>
-  <div><label for="toOrg">Organisation <small>(if any)</small></label><input id="toOrg"></div>
-  <div><label for="toType">Recipient type</label><select id="toType"></select></div>
-  <div></div>
-  <div><label for="toIdT">ID type</label><select id="toIdT"><option>PAN</option><option>Other identifier authorised by law</option></select></div>
-  <div><label for="toId">PAN / identifier <small>(required)</small></label><input id="toId" autocapitalize="characters"><div class="hint cond" id="altHint">Use another identifier only where PAN is not available.</div></div>
-</div></fieldset>
+<fieldset><legend>Who received it</legend>
+<div id="rcpts"></div>
+<button type="button" class="btn alt" id="addR">+ Add another recipient</button>
+<p class="hint">List everyone the information was shared with in this one sharing. Each person gets their own PAN or identifier and confidentiality safeguard.</p>
+</fieldset>
 
-<fieldset><legend>4. Why it was shared</legend>
+<fieldset><legend>Why it was shared</legend>
 <div class="grid">
   <div class="span2"><label for="purpose">Legitimate purpose <small>(Reg 3(1), 3(2A), 3(3))</small></label><select id="purpose"></select></div>
   <div class="span2 cond" id="boardBox"><label for="boardRef">Board approval reference <small>(Reg 3(3): board’s informed opinion that sharing is in the company’s best interest)</small></label><input id="boardRef" placeholder="Meeting date / resolution no."><div class="hint" id="boardHint"></div></div>
   <div class="span2 cond" id="otherBox"><label for="otherWhy">Explain the purpose</label><textarea id="otherWhy"></textarea></div>
 </div></fieldset>
 
-<fieldset><legend>5. Confidentiality &amp; source</legend>
+<fieldset><legend>Source and corrections</legend>
 <div class="grid">
-  <div><label for="conf">Confidentiality safeguard <small>(Reg 3(2B), 3(4), 9A(2)(d))</small></label><select id="conf"><option>NDA signed</option><option>Notice served to maintain confidentiality</option><option>Pending</option></select></div>
-  <div><label for="confDate">Date of NDA / notice</label><input id="confDate" type="date"></div>
   <div><label for="ext">Did the information come from outside the organisation?</label><select id="ext"><option value="no">No</option><option value="yes">Yes</option></select></div>
   <div class="cond" id="rcvBox"><label for="rcvAt">Received on <small>(entry is due within 2 calendar days)</small></label><input id="rcvAt" type="datetime-local"></div>
   <div class="span2"><label for="corr">Corrects earlier entry # <small>(only if this fixes a mistake)</small></label><input id="corr" type="number" min="1" style="max-width:160px"></div>
 </div></fieldset>
 
-<div class="row"><button class="btn" type="submit">Save entry</button><button class="btn alt" type="button" id="reset">Clear form</button><span class="hint">Only the fields marked “required” are compulsory under Reg 3(5). Everything else is optional. The time of saving is recorded automatically and cannot be changed afterwards.</span></div>
+<div class="actions"><button class="btn" type="submit">Save entry</button><button class="btn alt" type="button" id="reset">Clear form</button><span class="hint">Only the fields marked “required” are compulsory under Reg 3(5). Everything else is optional. The time of saving is recorded automatically and cannot be changed afterwards.</span></div>
 <div id="errs" class="err" role="alert"></div>
 </form>
 </section>
@@ -129,7 +136,7 @@ legend{font-weight:700;padding:0 6px;font-size:.92rem}
 <div><label for="pDpid">DP ID</label><input id="pDpid"></div>
 <div><label for="pIdT">ID type</label><select id="pIdT"><option>PAN</option><option>Other identifier authorised by law</option></select></div>
 <div><label for="pId">PAN / identifier <small>(required)</small></label><input id="pId" autocapitalize="characters"></div>
-<div><label for="pPh">Mobile / phone numbers used <small>(required)</small></label><input id="pPh"></div>
+<div><label for="pPh">Mobile / phone numbers used <small>(optional)</small></label><input id="pPh"></div>
 <div><label for="pEdu">Educational institutions <small>(one-time)</small></label><input id="pEdu"></div>
 <div><label for="pPast">Past employers <small>(one-time)</small></label><input id="pPast"></div>
 <div><label for="pDesAt">Date designated</label><input id="pDesAt" type="date"></div>
@@ -198,7 +205,7 @@ async function sha(s){var b=await crypto.subtle.digest("SHA-256",new TextEncoder
 function hin(prev,id,ts,data){return prev+"|"+id+"|"+ts+"|"+JSON.stringify(data)}
 async function verify(a){var prev="0".repeat(64);for(var i=0;i<a.length;i++){var e=a[i];if(e.id!==i+1||e.prev!==prev||await sha(hin(prev,e.id,e.ts,e.data))!==e.hash)return{ok:false,at:e.id};prev=e.hash}return{ok:true}}
 function fill(sel,arr,pair){$(sel).innerHTML=arr.map(function(x){return pair?'<option value="'+x[0]+'">'+esc(x[1])+'</option>':'<option>'+esc(x)+'</option>'}).join("")}
-fill("cat",CATS);fill("toType",RTYPES);fill("purpose",PURP,true);
+fill("cat",CATS);fill("purpose",PURP,true);
 function toast(m){var t=$("toast");t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(function(){t.hidden=true},3500)}
 function nowLocal(){var d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16)}
 function stamp(){var d=new Date(),o=-d.getTimezoneOffset(),s=o>=0?"+":"-",p=function(n){return String(Math.floor(Math.abs(n))).padStart(2,"0")};
@@ -207,9 +214,8 @@ function dayNum(s){var p=s.slice(0,10).split("-");return Date.UTC(+p[0],+p[1]-1,
 $("sharedAt").value=nowLocal();
 function cond(){var p=$("purpose").value;$("boardBox").classList.toggle("on",p==="t3i"||p==="t3ii");$("otherBox").classList.toggle("on",p==="other");
  $("boardHint").textContent=p==="t3i"?"Board must also require the parties to sign confidentiality and non-disclosure agreements (Reg 3(4)).":p==="t3ii"?"UPSI must be made generally available at least two trading days before the transaction, and parties must sign NDAs (Reg 3(4)).":"";
- $("rcvBox").classList.toggle("on",$("ext").value==="yes");
- $("altHint").classList.toggle("on",$("toIdT").selectedIndex===1||$("byIdT").selectedIndex===1)}
-["purpose","ext","toIdT","byIdT"].forEach(function(i){$(i).addEventListener("change",cond)});cond();
+ $("rcvBox").classList.toggle("on",$("ext").value==="yes")}
+["purpose","ext"].forEach(function(i){$(i).addEventListener("change",cond)});cond();
 document.querySelectorAll("nav button").forEach(function(b){b.addEventListener("click",function(){document.querySelectorAll("nav button").forEach(function(x){x.setAttribute("aria-selected",x===b)});["new","dp","reg","audit"].forEach(function(t){$("tab-"+t).hidden=t!==b.dataset.tab});if(b.dataset.tab==="reg")render()})});
 var PAN=/^[A-Z]{5}[0-9]{4}[A-Z]$/;
 function v(i){return $(i).value.trim()}
@@ -217,38 +223,54 @@ $("f").addEventListener("submit",async function(ev){ev.preventDefault();
  var er=[],p=v("purpose"),a=load();
  if(!window.crypto||!crypto.subtle){$("errs").textContent="This browser cannot create the tamper-proof hash. Open the page over https in a current browser.";return}
  if(!v("nature"))er.push("Describe the nature of the UPSI.");
- 
  if(v("sharedAt")>nowLocal())er.push("The sharing date and time cannot be in the future.");
- [["by","the person who shared"],["to","the recipient"]].forEach(function(x){
-  if(!v(x[0]+"Name"))er.push("Enter the name of "+x[1]+".");
-  var id=v(x[0]+"Id").toUpperCase();
-  if(!id)er.push("Enter the PAN or identifier of "+x[1]+".");
-  else if($(x[0]+"IdT").selectedIndex===0&&!PAN.test(id))er.push("PAN of "+x[1]+" must look like ABCDE1234F. If PAN is not available, choose the other identifier.")});
- 
- 
- 
- 
+ if(!v("byName"))er.push("Enter the name of the person who shared.");
+ var bid=v("byId").toUpperCase();
+ if(!bid)er.push("Enter the PAN or identifier of the person who shared.");
+ else if($("byIdT").selectedIndex===0&&!PAN.test(bid))er.push("PAN of the person who shared must look like ABCDE1234F. If PAN is not available, choose the other identifier.");
+ var rs=[];
+ document.querySelectorAll("#rcpts .rc").forEach(function(d,i){var g=function(c){return d.querySelector(c).value.trim()},id=g(".r-id").toUpperCase(),lab="recipient "+(i+1);
+  if(!g(".r-name"))er.push("Enter the name of "+lab+".");
+  if(!id)er.push("Enter the PAN or identifier of "+lab+".");
+  else if(d.querySelector(".r-idt").selectedIndex===0&&!PAN.test(id))er.push("PAN of "+lab+" must look like ABCDE1234F. If PAN is not available, choose the other identifier.");
+  rs.push({name:g(".r-name"),org:g(".r-org"),type:d.querySelector(".r-type").value,idType:d.querySelector(".r-idt").value,id:id,confidentiality:d.querySelector(".r-conf").value,confidentialityDate:g(".r-cd")})});
  if($("ext").value==="yes"&&v("rcvAt")>nowLocal())er.push("Received time cannot be in the future.");
  if(v("corr")&&(+v("corr")<1||+v("corr")>a.length))er.push("Entry # to correct does not exist.");
  if(er.length){$("errs").innerHTML=er.map(esc).join("<br>");return}
  $("errs").textContent="";
  var ts=stamp(),data={category:v("cat"),project:v("ref"),nature:v("nature"),mode:v("mode"),sharedAt:v("sharedAt"),
-  by:{name:v("byName"),designation:v("byDesig"),idType:$("byIdT").value,id:v("byId").toUpperCase()},
-  to:{name:v("toName"),org:v("toOrg"),type:$("toType").value,idType:$("toIdT").value,id:v("toId").toUpperCase()},
+  by:{name:v("byName"),designation:v("byDesig"),idType:$("byIdT").value,id:bid},
+  recipients:rs,
   purpose:$("purpose").selectedOptions[0].textContent,purposeNote:p==="other"?v("otherWhy"):(v("boardRef")||""),
-  confidentiality:$("conf").value,confidentialityDate:v("confDate"),
   external:$("ext").value==="yes",receivedAt:$("ext").value==="yes"?v("rcvAt"):"",corrects:v("corr")?+v("corr"):null,
   lateEntry:$("ext").value==="yes"&&dayNum(ts)-dayNum(v("rcvAt"))>2};
  var prev=a.length?a[a.length-1].hash:"0".repeat(64),id=a.length+1;
  a.push({id:id,ts:ts,prev:prev,hash:await sha(hin(prev,id,ts,data)),data:data});save(a);
- ["nature","ref","byName","byDesig","byId","toName","toOrg","toId","boardRef","otherWhy","corr","rcvAt"].forEach(function(i){$(i).value=""});$("sharedAt").value=nowLocal();cond();
+ ["nature","ref","byName","byDesig","byId","boardRef","otherWhy","corr","rcvAt"].forEach(function(i){$(i).value=""});$("sharedAt").value=nowLocal();rReset();cond();
  toast("Entry #"+id+" saved at "+ts.replace("T"," "));status()});
-$("reset").addEventListener("click",function(){$("f").reset();$("sharedAt").value=nowLocal();$("errs").textContent="";cond()});
-function flags(e){var d=e.data,f=[];if(d.lateEntry)f.push('<span class="pill bad">Entered after 2 days</span>');if(d.confidentiality==="Pending")f.push('<span class="pill warn">Confidentiality pending</span>');if(d.corrects)f.push('<span class="pill warn">Corrects #'+d.corrects+'</span>');return f.join(" ")}
+function rnum(){var c=document.querySelectorAll("#rcpts .rc");c.forEach(function(d,i){d.querySelector(".rn").textContent="Recipient "+(i+1);d.querySelector(".rx").hidden=c.length<2})}
+function addR(){var d=document.createElement("div");d.className="rc";
+ d.innerHTML='<div class="rch"><b class="rn"></b><button type="button" class="btn alt rx">Remove</button></div><div class="grid">'+
+ '<div><label>Name <small>(required)</small></label><input class="r-name" list="dpl" autocomplete="off"></div>'+
+ '<div><label>Organisation <small>(if any)</small></label><input class="r-org"></div>'+
+ '<div><label>Recipient type</label><select class="r-type">'+RTYPES.map(function(x){return"<option>"+esc(x)+"</option>"}).join("")+'</select></div><div></div>'+
+ '<div><label>ID type</label><select class="r-idt"><option>PAN</option><option>Other identifier authorised by law</option></select></div>'+
+ '<div><label>PAN / identifier <small>(required)</small></label><input class="r-id" autocapitalize="characters"><div class="hint">Use another identifier only where PAN is not available.</div></div>'+
+ '<div><label>Confidentiality safeguard <small>(optional · Reg 3(2B), 3(4), 9A(2)(d))</small></label><select class="r-conf"><option value="">Select…</option><option>NDA signed</option><option>Notice served to maintain confidentiality</option><option>Pending</option></select></div>'+
+ '<div><label>Date of NDA / notice</label><input class="r-cd" type="date"></div></div>';
+ $("rcpts").appendChild(d);
+ d.querySelector(".r-name").addEventListener("change",function(){var n=this.value.trim().toLowerCase(),x=DPS.filter(function(y){return y.name.toLowerCase()===n})[0];if(!x)return;d.querySelector(".r-idt").selectedIndex=(!x.idType||/^pan/i.test(x.idType))?0:1;d.querySelector(".r-id").value=x.id||""});
+ d.querySelector(".rx").addEventListener("click",function(){d.remove();rnum()});rnum()}
+function rReset(){$("rcpts").innerHTML="";addR()}
+$("addR").addEventListener("click",function(){addR();var c=document.querySelectorAll("#rcpts .rc");c[c.length-1].querySelector(".r-name").focus()});
+addR();
+$("reset").addEventListener("click",function(){$("f").reset();$("sharedAt").value=nowLocal();$("errs").textContent="";rReset();cond()});
+function RS(d){return d.recipients||[Object.assign({},d.to,{confidentiality:d.confidentiality,confidentialityDate:d.confidentialityDate})]}
+function flags(e){var d=e.data,f=[];if(d.lateEntry)f.push('<span class="pill bad">Entered after 2 days</span>');if(RS(d).some(function(r){return r.confidentiality==="Pending"}))f.push('<span class="pill warn">Confidentiality pending</span>');if(d.corrects)f.push('<span class="pill warn">Corrects #'+d.corrects+'</span>');return f.join(" ")}
 function render(){var a=load(),q=$("q").value.toLowerCase();
  var r=a.filter(function(e){return!q||JSON.stringify(e.data).toLowerCase().indexOf(q)>-1}).reverse();
  $("empty").hidden=a.length>0;
- $("rows").innerHTML=r.map(function(e){var d=e.data;return"<tr><td>"+e.id+'</td><td class="ts">'+esc(e.ts.replace("T","<br>"))+"</td><td><b>"+esc(d.category)+"</b>"+(d.project?" ("+esc(d.project)+")":"")+"<br>"+esc(d.nature)+"</td><td>"+esc(d.by.name)+"<br>"+esc(d.by.designation)+'<div class="mono">'+esc(d.by.id)+"</div></td><td>"+esc(d.to.name)+(d.to.org?", "+esc(d.to.org):"")+"<br>"+esc(d.to.type)+'<div class="mono">'+esc(d.to.id)+"</div></td><td>"+esc(d.purpose)+(d.purposeNote?"<br>"+esc(d.purposeNote):"")+"</td><td>"+esc(d.confidentiality)+(d.confidentialityDate?"<br>"+esc(d.confidentialityDate):"")+"</td><td>"+flags(e)+"</td></tr>"}).join("")}
+ $("rows").innerHTML=r.map(function(e){var d=e.data,R=RS(d);return"<tr><td>"+e.id+'</td><td class="ts">'+esc(e.ts).replace("T","<br>")+"</td><td><b>"+esc(d.category)+"</b>"+(d.project?" ("+esc(d.project)+")":"")+"<br>"+esc(d.nature)+"</td><td>"+esc(d.by.name)+"<br>"+esc(d.by.designation)+'<div class="mono">'+esc(d.by.id)+"</div></td><td>"+R.map(function(x){return'<div class="rl">'+esc(x.name)+(x.org?", "+esc(x.org):"")+"<br>"+esc(x.type)+'<div class="mono">'+esc(x.id)+"</div></div>"}).join("")+"</td><td>"+esc(d.purpose)+(d.purposeNote?"<br>"+esc(d.purposeNote):"")+"</td><td>"+R.map(function(x){return'<div class="rl">'+esc(x.confidentiality||"Not recorded")+(x.confidentialityDate?"<br>"+esc(x.confidentialityDate):"")+"</div>"}).join("")+"</td><td>"+flags(e)+"</td></tr>"}).join("")}
 $("q").addEventListener("input",render);
 async function status(){var a=load(),r=await verify(a),rd=await verify(dload()),p=$("chainPill");if(r.ok&&!rd.ok)r={ok:false,at:rd.at+" of the designated-persons log"};$("count").textContent=a.length+(a.length===1?" entry":" entries");
  p.className="pill "+(r.ok?"ok":"bad");p.textContent=r.ok?"Chain intact":"Chain broken at entry #"+r.at;return r}
@@ -261,7 +283,7 @@ $("rs").addEventListener("change",async function(ev){var f=ev.target.files[0];if
   if(j.dp&&j.dp.length){var rd=await verify(j.dp);if(!rd.ok)return toast("Designated-persons log failed verification at entry #"+rd.at+". Not restored.");mem.p=j.dp;try{localStorage.setItem(KP,JSON.stringify(j.dp))}catch(e){}derive()}save(j.entries);if(j.company){$("company").value=j.company;lc(j.company)}toast("Restored "+j.entries.length+" entries.");status();render()}catch(e){toast("Could not read that file.")}ev.target.value=""});
 function regCsv(){var h=["Entry","Recorded at","Category","Project","Nature","Mode","Shared at","Shared by","Designation","Sharer ID type","Sharer ID","Shared with","Organisation","Recipient type","Recipient ID type","Recipient ID","Purpose","Purpose note","Confidentiality","Confidentiality date","From outside","Received at","Late entry","Corrects entry","Hash"];
  var q=function(x){return'"'+String(x==null?"":x).replace(/"/g,'""')+'"'};
- var rows=load().map(function(e){var d=e.data;return[e.id,e.ts,d.category,d.project,d.nature,d.mode,d.sharedAt,d.by.name,d.by.designation,d.by.idType,d.by.id,d.to.name,d.to.org,d.to.type,d.to.idType,d.to.id,d.purpose,d.purposeNote,d.confidentiality,d.confidentialityDate,d.external?"Yes":"No",d.receivedAt,d.lateEntry?"Yes":"No",d.corrects||"",e.hash].map(q).join(",")});
+ var rows=[];load().forEach(function(e){var d=e.data;RS(d).forEach(function(t){rows.push([e.id,e.ts,d.category,d.project,d.nature,d.mode,d.sharedAt,d.by.name,d.by.designation,d.by.idType,d.by.id,t.name,t.org,t.type,t.idType,t.id,d.purpose,d.purposeNote,t.confidentiality,t.confidentialityDate,d.external?"Yes":"No",d.receivedAt,d.lateEntry?"Yes":"No",d.corrects||"",e.hash].map(q).join(","))})});
  return[h.map(q).join(",")].concat(rows).join("\r\n")}
 $("csv").addEventListener("click",function(){dl("upsi-register-"+stamp().slice(0,10)+".csv","\ufeff"+regCsv())});
 $("xl").addEventListener("click",function(){if(!window.XLSX)return toast("The Excel writer did not load. Use Export CSV in the Register tab.");var W=XLSX.utils.book_new(),S=function(rows,n){XLSX.utils.book_append_sheet(W,XLSX.utils.aoa_to_sheet(rows),n)};
@@ -279,7 +301,7 @@ function dpush(data){Q=Q.then(function(){return push1(data)}).catch(function(){}
 function derive(){var m={},rl={};dload().forEach(function(e){var d=e.data;if(d.type==="dp")m[d.p.uid]=d.p;else if(d.type==="rel")rl[d.r.uid]=d.r;else if(d.type==="relx")delete rl[d.uid]});DPS=Object.keys(m).map(function(k){return m[k]});REL=Object.keys(rl).map(function(k){return rl[k]});dpDraw();status()}
 function dpDrawOld(){$("dpl").innerHTML=DPS.map(function(d){return'<option value="'+esc(d.name)+'">'+esc(d.designation||"")+'</option>'}).join("");$("dpCount").textContent=DPS.length?DPS.length+" loaded":"none loaded"}
 function dpFill(p){var d=DPS.filter(function(x){return x.name.toLowerCase()===v(p+"Name").toLowerCase()})[0];if(!d)return;if(p==="by")$("byDesig").value=d.designation||"";$(p+"IdT").selectedIndex=(!d.idType||/^pan/i.test(d.idType))?0:1;$(p+"Id").value=d.id||"";cond()}
-["by","to"].forEach(function(p){$(p+"Name").addEventListener("change",function(){dpFill(p)})});
+$("byName").addEventListener("change",function(){dpFill("by")});
 function dpRows(rows){var m=function(r,k){for(var x in r){if(x.toLowerCase().replace(/[^a-z]/g,"").indexOf(k)===0)return String(r[x]==null?"":r[x]).trim()}return""};
  var out=rows.map(function(r){var o={dpid:m(r,"dpid"),name:m(r,"name"),designation:m(r,"designation"),dept:m(r,"department"),idType:m(r,"idtype"),id:m(r,"pan").toUpperCase(),phones:m(r,"mobile"),edu:m(r,"educational"),past:m(r,"past"),designated:m(r,"datedesignated"),ceased:m(r,"dateceased"),annual:m(r,"lastannual")};var ex=DPS.filter(function(d){return(o.id&&d.id===o.id)||d.name.toLowerCase()===o.name.toLowerCase()})[0];o.uid=ex?ex.uid:"u"+Date.now().toString(36)+Math.random().toString(36).slice(2,7);return o}).filter(function(d){return d.name&&!/^\(example\)/i.test(d.name)});
  if(!out.length)return toast("No people found. Use the Designated Persons sheet of the template, with its heading row.");
@@ -300,7 +322,6 @@ $("dpBody").addEventListener("click",function(ev){var u=ev.target.dataset&&ev.ta
 $("dpSave").addEventListener("click",async function(){var e=[],id=v("pId").toUpperCase();
  if(!v("pName"))e.push("Enter the name.");
  if(!id)e.push("Enter the PAN or identifier.");else if($("pIdT").selectedIndex===0&&!PAN.test(id))e.push("PAN must look like ABCDE1234F. If PAN is not available, choose the other identifier.");
- if(!v("pPh"))e.push("Enter the phone or mobile numbers used.");
  $("dpErr").innerHTML=e.map(esc).join("<br>");if(e.length)return;
  var uid=$("pUid").value||"u"+Date.now().toString(36)+Math.random().toString(36).slice(2,7),p={uid:uid,idType:$("pIdT").value};Object.keys(PF).forEach(function(k){p[PF[k]]=v(k)});p.id=id;
  await dpush({type:"dp",action:$("pUid").value?"update":"add",p:p});dpClr();toast("Saved.")});
@@ -312,7 +333,7 @@ async function relImport(rows){var m=function(r,k){for(var x in r){if(x.toLowerC
  if(n)toast(n+" related persons loaded.")}
 function dpSample(){if(!window.XLSX)return toast("The Excel writer did not load. Check your connection and try again.");
  var W=XLSX.utils.book_new(),S=function(rows,n,w){var s=XLSX.utils.aoa_to_sheet(rows);s["!cols"]=w.map(function(x){return{wch:x}});XLSX.utils.book_append_sheet(W,s,n)};
- S([["DP ID","Name *","Designation","Department","ID type","PAN / identifier *","Mobile / phone numbers used *","Educational institutions graduated from (one-time)","Past employers (one-time)","Date designated","Date ceased","Last annual disclosure date"],
+ S([["DP ID","Name *","Designation","Department","ID type","PAN / identifier *","Mobile / phone numbers used","Educational institutions graduated from (one-time)","Past employers (one-time)","Date designated","Date ceased","Last annual disclosure date"],
  ["DP-001","(Example) Anita Rao","Chief Financial Officer","Finance","PAN","ABCDE1234F","9800000001, 9800000002","IIM Ahmedabad; Delhi University","Example Industries Ltd","2024-04-01","","2026-04-15"],
  ["DP-002","(Example) Vikram Shah","Company Secretary","Secretarial","PAN","BCDEF2345G","9800000003","ICSI; Mumbai University","Sample Textiles Ltd","2023-07-10","","2026-04-18"],
  ["DP-003","(Example) Meera Iyer","Consultant","Strategy","Other identifier authorised by law","Passport N1234567","9800000004","","","2025-01-05","2026-03-31","2026-03-20"]],"Designated Persons",[10,26,24,16,32,22,28,42,28,14,14,22]);
@@ -320,7 +341,7 @@ function dpSample(){if(!window.XLSX)return toast("The Excel writer did not load.
  S([["Field","Required","Basis","Note"],
  ["Name","Yes","Reg 3(5), 9A(2)(a)","Full name. Rows starting with (Example) are skipped on import, so replace them with real people. Keep row 1 headings unchanged."],
  ["PAN / identifier","Yes","Reg 3(5)","PAN, or another identifier authorised by law where PAN is not available (then set ID type to the second option)."],
- ["Mobile / phone numbers used","Yes","Schedule B, clause 14(c)","All numbers the designated person uses, separated by commas."],
+ ["Mobile / phone numbers used","No","Schedule B, clause 14(c)","Optional here. Designated persons are still expected to disclose the numbers they use; separate several with commas."],
  ["Educational institutions, past employers","No (disclose once)","Schedule B, clause 14","Not forced by this tool, but designated persons must disclose them once."],
  ["Designation, department, DP ID","No","Reg 9A(2)(a)","Helpful for identifying designated persons."],
  ["Dates designated, ceased, last annual disclosure","No","Schedule B, clause 14","Use YYYY-MM-DD. Set Date ceased when someone stops being a designated person. Disclosures are due annually and when details change."],
